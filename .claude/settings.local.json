@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm create:*)",
+      "Bash(npm install:*)",
+      "Bash(npm run dev:*)",
+      "Bash(npx tailwindcss:*)",
+      "Bash(node:*)",
+      "Bash(xargs sed -i \"s|from ''\\\\.\\\\./types''|from ''../types/index.js''|g\")",
+      "Bash(xargs sed:*)"
+    ]
+  }
+}
