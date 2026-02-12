@@ -4,8 +4,9 @@ import { useAuth } from '../contexts/AuthContext';
 import { Dumbbell } from 'lucide-react';
 
 export const LoginPage: React.FC = () => {
-  const { login } = useAuth();
+  const { login, register } = useAuth();
   const navigate = useNavigate();
+  const [isRegister, setIsRegister] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -16,7 +17,11 @@ export const LoginPage: React.FC = () => {
     setError('');
     setBusy(true);
     try {
-      await login(email, password);
+      if (isRegister) {
+        await register(email, password);
+      } else {
+        await login(email, password);
+      }
       navigate('/');
     } catch (err: any) {
       setError(err.message || 'Something went wrong');
@@ -38,7 +43,9 @@ export const LoginPage: React.FC = () => {
           </div>
           <h1 className="text-lg font-bold text-neutral-900">AI Fitness Coach</h1>
         </div>
-        <p className="text-xs text-neutral-400 mb-6 ml-[38px]">Sign in to continue</p>
+        <p className="text-xs text-neutral-400 mb-6 ml-[38px]">
+          {isRegister ? 'Create your account' : 'Sign in to continue'}
+        </p>
 
         <form onSubmit={handleSubmit} className="space-y-3">
           <div>
@@ -60,8 +67,9 @@ export const LoginPage: React.FC = () => {
               className={inputClass}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="••••••••"
+              placeholder={isRegister ? 'Min 6 characters' : '••••••••'}
               required
+              minLength={isRegister ? 6 : undefined}
             />
           </div>
 
@@ -74,9 +82,18 @@ export const LoginPage: React.FC = () => {
             disabled={busy}
             className="w-full bg-neutral-900 text-white text-sm font-medium py-2.5 rounded-lg hover:bg-neutral-800 transition-colors disabled:opacity-40"
           >
-            {busy ? 'Please wait...' : 'Sign In'}
+            {busy ? 'Please wait...' : isRegister ? 'Create Account' : 'Sign In'}
           </button>
         </form>
+
+        <div className="mt-5 text-center">
+          <button
+            onClick={() => { setIsRegister(!isRegister); setError(''); }}
+            className="text-xs text-neutral-400 hover:text-neutral-600 transition-colors"
+          >
+            {isRegister ? 'Already have an account? Sign in' : "Don't have an account? Register"}
+          </button>
+        </div>
       </div>
     </div>
   );
